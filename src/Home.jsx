@@ -1,14 +1,22 @@
 import { useState, useEffect, useRef } from 'react'
 import { NavLink } from 'react-router-dom'
-import { fetchTrending } from './Fetcher.jsx'
+import { fetchHomeData } from './Fetcher.jsx'
 import logo from './assets/logo.png'
 import './Home.css'
 
 export function Home() {
   const [trendingMovies, setTrendingMovies] = useState([])
+  const [topRatedMovies, setTopRatedMovies] = useState([])
+  const [upcomingMovies, setUpcomingMovies] = useState([])
   
   useEffect(() => {
-    fetchTrending().then(movies => setTrendingMovies(movies));
+    fetchHomeData().then(data => {
+      if (data) {
+        setTrendingMovies(data.trending);
+        setTopRatedMovies(data.topRated);
+        setUpcomingMovies(data.upcoming);
+      }
+    });
   }, []);
 
   const containerRef = useRef(null);
