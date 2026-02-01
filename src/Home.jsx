@@ -22,10 +22,21 @@ export function Home() {
   const containerRef = useRef(null);
   const trackRef = useRef(null);
   const cardRef = useRef(null);
+  const thumbStripRef = useRef(null);
   const [index, setIndex] = useState(0);
   const [paused, setPaused] = useState(false);
   const [cardWidth, setCardWidth] = useState(0);
   const gap = 16;
+
+  // Scroll des vignettes pour les garder au centre
+  useEffect(() => {
+    const strip = thumbStripRef.current;
+    if (!strip) return;
+    const activeThumb = strip.children[index];
+    if (activeThumb) {
+      activeThumb.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+    }
+  }, [index]);
 
   useEffect(() => {
     const update = () => {
@@ -54,40 +65,52 @@ export function Home() {
   const prev = () => { setIndex(i => (i - 1 + trendingMovies.length) % trendingMovies.length); }
   const next = () => { setIndex(i => (i + 1) % trendingMovies.length); }
 
+  const activeMovie = trendingMovies[index];
+
   return (  
     <>
-      <main>
-        <h1>Trending Movies</h1>
-        <div 
-          className="movies-caroussel" 
-          ref={containerRef} 
-          onMouseEnter={() => setPaused(true)} 
-          onMouseLeave={() => setPaused(false)}
-        >
-          <button className="carousel-btn prev" onClick={prev} aria-label="Précédent">‹</button>
-
-          <div 
-            className="carousel-track" 
-            ref={trackRef}
-            style={{ transform: `translateX(-${index * cardWidth}px)` }}
+      <main className="home-main">
+        {/* Affichage du film/série sur lequel on focus */}
+        {activeMovie && (
+          <section 
+            className="hero"
+            onMouseEnter={() => setPaused(true)}
+            onMouseLeave={() => setPaused(false)}
           >
-            {trendingMovies.map((movie, idx) => (
-              <div 
-                key={movie.id} 
-                className="movie-card" 
-                ref={idx === 0 ? cardRef : null}
-              >
-                <img 
-                  src={`https://image.tmdb.org/t/p/w300${movie.poster_path}`} 
-                  alt={movie.title} 
-                />
-                <h2>{movie.title}</h2>
+            <img
+              className="hero-bg"
+              src={`https://image.tmdb.org/t/p/w1280${activeMovie.backdrop_path}`}
+              alt=""
+            />
+            <div className="hero-gradient" />
+            <div className="hero-content">
+              <h1 className="hero-title">{activeMovie.title}</h1>
+              <p className="hero-overview">{activeMovie.overview}</p>
+              <div className="hero-actions">
+                <button className="btn-info">More Info</button>
               </div>
-            ))}
-          </div>
+            </div>
 
-          <button className="carousel-btn next" onClick={next} aria-label="Suivant">›</button>
-        </div>
+            <button className="hero-nav prev" onClick={prev} aria-label="Previous">‹</button>
+            <button className="hero-nav next" onClick={next} aria-label="Next">›</button>
+
+            {/* Bande de vignettes en bas à droite */}
+            <div className="thumb-strip" ref={thumbStripRef}>
+              {trendingMovies.map((movie, idx) => (
+                <button
+                  key={movie.id}
+                  className={`thumb${idx === index ? ' active' : ''}`}
+                  onClick={() => setIndex(idx)}
+                >
+                  <img
+                    src={`https://image.tmdb.org/t/p/w300${movie.poster_path}`}
+                    alt={movie.title}
+                  />
+                </button>
+              ))}
+            </div>
+          </section>
+        )}
       </main>
     </>
   )
