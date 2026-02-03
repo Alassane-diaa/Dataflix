@@ -10,6 +10,10 @@ export function Home() {
   const [upcomingMovies, setUpcomingMovies] = useState([])
   const [popularSeries, setPopularSeries] = useState([])
   
+  const [showAllSeries, setShowAllSeries] = useState(false)
+  const [showAllTopRated, setShowAllTopRated] = useState(false)
+  const [showAllUpcoming, setShowAllUpcoming] = useState(false)
+  
   useEffect(() => {
     fetchHomeData().then(data => {
       if (data) {
@@ -25,6 +29,9 @@ export function Home() {
   const trackRef = useRef(null);
   const cardRef = useRef(null);
   const thumbStripRef = useRef(null);
+  const seriesRef = useRef(null);
+  const topRatedRef = useRef(null);
+  const upcomingRef = useRef(null);
   const [index, setIndex] = useState(0);
   const [paused, setPaused] = useState(false);
   const [cardWidth, setCardWidth] = useState(0);
@@ -69,6 +76,27 @@ export function Home() {
 
   const prev = () => { setIndex(i => (i - 1 + trendingMovies.length) % trendingMovies.length); }
   const next = () => { setIndex(i => (i + 1) % trendingMovies.length); }
+
+  const toggleSeries = () => {
+    if (showAllSeries && seriesRef.current) {
+      seriesRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+    setShowAllSeries(!showAllSeries);
+  };
+
+  const toggleTopRated = () => {
+    if (showAllTopRated && topRatedRef.current) {
+      topRatedRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+    setShowAllTopRated(!showAllTopRated);
+  };
+
+  const toggleUpcoming = () => {
+    if (showAllUpcoming && upcomingRef.current) {
+      upcomingRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+    setShowAllUpcoming(!showAllUpcoming);
+  };
 
   const activeMovie = trendingMovies[index];
 
@@ -117,10 +145,10 @@ export function Home() {
           </section>
         )}
 
-        <section className="content-section">
+        <section className="content-section" ref={seriesRef}>
           <h2 className="section-title">Popular Series</h2>
           <div className="movies-grid">
-            {popularSeries.slice(0, 6).map(series => (
+            {popularSeries.slice(0, showAllSeries ? popularSeries.length : 6).map(series => (
               <div key={series.id} className="movie-card">
                 <img
                   src={`https://image.tmdb.org/t/p/w500${series.poster_path}`}
@@ -134,12 +162,17 @@ export function Home() {
               </div>
             ))}
           </div>
+          {popularSeries.length > 6 && (
+            <button className="btn-show-more" onClick={toggleSeries}>
+              {showAllSeries ? 'Afficher moins' : 'Afficher plus'}
+            </button>
+          )}
         </section>
 
-        <section className="content-section">
+        <section className="content-section" ref={topRatedRef}>
           <h2 className="section-title">Top Rated</h2>
           <div className="movies-grid">
-            {topRatedMovies.slice(0, 6).map(movie => (
+            {topRatedMovies.slice(0, showAllTopRated ? topRatedMovies.length : 6).map(movie => (
               <div key={movie.id} className="movie-card">
                 <img
                   src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
@@ -153,13 +186,18 @@ export function Home() {
               </div>
             ))}
           </div>
+          {topRatedMovies.length > 6 && (
+            <button className="btn-show-more" onClick={toggleTopRated}>
+              {showAllTopRated ? 'Afficher moins' : 'Afficher plus'}
+            </button>
+          )}
         </section>
 
         {/* Section Upcoming */}
-        <section className="content-section">
+        <section className="content-section" ref={upcomingRef}>
           <h2 className="section-title">Coming Soon</h2>
           <div className="movies-grid">
-            {upcomingMovies.slice(0, 6).map(movie => (
+            {upcomingMovies.slice(0, showAllUpcoming ? upcomingMovies.length : 6).map(movie => (
               <div key={movie.id} className="movie-card">
                 <img
                   src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
@@ -173,6 +211,11 @@ export function Home() {
               </div>
             ))}
           </div>
+          {upcomingMovies.length > 6 && (
+            <button className="btn-show-more" onClick={toggleUpcoming}>
+              {showAllUpcoming ? 'Afficher moins' : 'Afficher plus'}
+            </button>
+          )}
         </section>
       </main>
     </>
