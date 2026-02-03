@@ -8,6 +8,7 @@ export function Home() {
   const [trendingMovies, setTrendingMovies] = useState([])
   const [topRatedMovies, setTopRatedMovies] = useState([])
   const [upcomingMovies, setUpcomingMovies] = useState([])
+  const [popularSeries, setPopularSeries] = useState([])
   
   useEffect(() => {
     fetchHomeData().then(data => {
@@ -15,6 +16,7 @@ export function Home() {
         setTrendingMovies(data.trending);
         setTopRatedMovies(data.topRated);
         setUpcomingMovies(data.upcoming);
+        setPopularSeries(data.popularSeries);
       }
     });
   }, []);
@@ -34,7 +36,10 @@ export function Home() {
     if (!strip) return;
     const activeThumb = strip.children[index];
     if (activeThumb) {
-      activeThumb.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+      const stripRect = strip.getBoundingClientRect();
+      const thumbRect = activeThumb.getBoundingClientRect();
+      const scrollLeft = strip.scrollLeft + (thumbRect.left - stripRect.left) - (stripRect.width / 2) + (thumbRect.width / 2);
+      strip.scrollTo({ left: scrollLeft, behavior: 'smooth' });
     }
   }, [index]);
 
@@ -111,6 +116,64 @@ export function Home() {
             </div>
           </section>
         )}
+
+        <section className="content-section">
+          <h2 className="section-title">Popular Series</h2>
+          <div className="movies-grid">
+            {popularSeries.slice(0, 6).map(series => (
+              <div key={series.id} className="movie-card">
+                <img
+                  src={`https://image.tmdb.org/t/p/w500${series.poster_path}`}
+                  alt={series.name}
+                  className="movie-poster"
+                />
+                <div className="movie-info">
+                  <h3 className="movie-title">{series.name}</h3>
+                  <p className="movie-rating">⭐ {series.vote_average.toFixed(1)}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        <section className="content-section">
+          <h2 className="section-title">Top Rated</h2>
+          <div className="movies-grid">
+            {topRatedMovies.slice(0, 6).map(movie => (
+              <div key={movie.id} className="movie-card">
+                <img
+                  src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
+                  alt={movie.title}
+                  className="movie-poster"
+                />
+                <div className="movie-info">
+                  <h3 className="movie-title">{movie.title}</h3>
+                  <p className="movie-rating">⭐ {movie.vote_average.toFixed(1)}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* Section Upcoming */}
+        <section className="content-section">
+          <h2 className="section-title">Coming Soon</h2>
+          <div className="movies-grid">
+            {upcomingMovies.slice(0, 6).map(movie => (
+              <div key={movie.id} className="movie-card">
+                <img
+                  src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
+                  alt={movie.title}
+                  className="movie-poster"
+                />
+                <div className="movie-info">
+                  <h3 className="movie-title">{movie.title}</h3>
+                  <p className="movie-release">{new Date(movie.release_date).getFullYear()}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
       </main>
     </>
   )
