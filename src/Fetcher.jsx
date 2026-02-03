@@ -13,16 +13,18 @@ export const fetchHomeData = async () => {
   };
 
   try {
-    const [trending, topRated, upcoming] = await Promise.all([
+    const [trending, topRated, upcoming, popularSeries] = await Promise.all([
       fetch(`${import.meta.env.VITE_TMDB_BASE_URL}/trending/movie/week?language=fr-FR`, options).then(res => res.json()),
       fetch(`${import.meta.env.VITE_TMDB_BASE_URL}/movie/top_rated?language=fr-FR`, options).then(res => res.json()),
       fetch(`${import.meta.env.VITE_TMDB_BASE_URL}/movie/upcoming?language=fr-FR`, options).then(res => res.json()),
+      fetch(`${import.meta.env.VITE_TMDB_BASE_URL}/tv/popular?language=fr-FR`, options).then(res => res.json()),
     ]);
 
     return {
       trending: trending.results,
       topRated: topRated.results,
-      upcoming: upcoming.results
+      upcoming: upcoming.results,
+      popularSeries: popularSeries.results
     };
   } catch (error) {
     console.error("Erreur Home Data:", error);
