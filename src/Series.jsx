@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { fetchSeriesData } from './Fetcher.jsx';
 import './Series.css';
 
@@ -34,7 +35,7 @@ export default function Series() {
         <h2 className="section-title">Popular Series</h2>
         <div className="series-grid">
           {popularSeries.slice(0, showAllPopular ? popularSeries.length : 12).map(series => (
-            <div key={series.id} className="series-card">
+            <Link key={series.id} to={`/tv/${series.id}`} className="series-card">
               <img
                 src={`https://image.tmdb.org/t/p/w500${series.poster_path}`}
                 alt={series.name}
@@ -44,7 +45,7 @@ export default function Series() {
                 <h3 className="series-title">{series.name}</h3>
                 <p className="series-rating">⭐ {series.vote_average.toFixed(1)}</p>
               </div>
-            </div>
+            </Link>
           ))}
         </div>
         {popularSeries.length > 12 && (
@@ -58,7 +59,7 @@ export default function Series() {
         <h2 className="section-title">Top Rated Series</h2>
         <div className="series-grid">
           {topRatedSeries.slice(0, showAllTopRated ? topRatedSeries.length : 12).map(series => (
-            <div key={series.id} className="series-card">
+            <Link key={series.id} to={`/tv/${series.id}`} className="series-card">
               <img
                 src={`https://image.tmdb.org/t/p/w500${series.poster_path}`}
                 alt={series.name}
@@ -68,7 +69,7 @@ export default function Series() {
                 <h3 className="series-title">{series.name}</h3>
                 <p className="series-rating">⭐ {series.vote_average.toFixed(1)}</p>
               </div>
-            </div>
+            </Link>
           ))}
         </div>
         {topRatedSeries.length > 12 && (
@@ -82,7 +83,7 @@ export default function Series() {
         <h2 className="section-title">Airing Today</h2>
         <div className="series-grid">
           {airingTodaySeries.slice(0, showAllAiringToday ? airingTodaySeries.length : 12).map(series => (
-            <div key={series.id} className="series-card">
+            <Link key={series.id} to={`/tv/${series.id}`} className="series-card">
               <img
                 src={`https://image.tmdb.org/t/p/w500${series.poster_path}`}
                 alt={series.name}
@@ -92,7 +93,7 @@ export default function Series() {
                 <h3 className="series-title">{series.name}</h3>
                 <p className="series-rating">⭐ {series.vote_average.toFixed(1)}</p>
               </div>
-            </div>
+            </Link>
           ))}
         </div>
         {airingTodaySeries.length > 12 && (
@@ -106,7 +107,7 @@ export default function Series() {
         <h2 className="section-title">On The Air</h2>
         <div className="series-grid">
           {onTheAirSeries.slice(0, showAllOnTheAir ? onTheAirSeries.length : 12).map(series => (
-            <div key={series.id} className="series-card">
+            <Link key={series.id} to={`/tv/${series.id}`} className="series-card">
               <img
                 src={`https://image.tmdb.org/t/p/w500${series.poster_path}`}
                 alt={series.name}
@@ -116,7 +117,7 @@ export default function Series() {
                 <h3 className="series-title">{series.name}</h3>
                 <p className="series-rating">⭐ {series.vote_average.toFixed(1)}</p>
               </div>
-            </div>
+            </Link>
           ))}
         </div>
         {onTheAirSeries.length > 12 && (
