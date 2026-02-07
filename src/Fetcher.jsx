@@ -31,3 +31,32 @@ export const fetchHomeData = async () => {
     return null;
   }
 };
+
+export const fetchMoviesData = async () => {
+  const options = {
+    method: 'GET',
+    headers: {
+      accept: 'application/json',
+      Authorization: `Bearer ${import.meta.env.VITE_TMDB_TOKEN}`
+    }
+  };
+
+  try {
+    const [popular, topRated, nowPlaying, upcoming] = await Promise.all([
+      fetch(`${import.meta.env.VITE_TMDB_BASE_URL}/movie/popular?language=fr-FR`, options).then(res => res.json()),
+      fetch(`${import.meta.env.VITE_TMDB_BASE_URL}/movie/top_rated?language=fr-FR`, options).then(res => res.json()),
+      fetch(`${import.meta.env.VITE_TMDB_BASE_URL}/movie/now_playing?language=fr-FR`, options).then(res => res.json()),
+      fetch(`${import.meta.env.VITE_TMDB_BASE_URL}/movie/upcoming?language=fr-FR`, options).then(res => res.json()),
+    ]);
+
+    return {
+      popular: popular.results,
+      topRated: topRated.results,
+      nowPlaying: nowPlaying.results,
+      upcoming: upcoming.results
+    };
+  } catch (error) {
+    console.error("Erreur Movies Data:", error);
+    return null;
+  }
+};
