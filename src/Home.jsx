@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
-import { NavLink } from 'react-router-dom'
+import { NavLink, Link } from 'react-router-dom'
 import { fetchHomeData } from './Fetcher.jsx'
 import logo from './assets/logo.png'
 import './Home.css'
@@ -120,7 +120,7 @@ export function Home() {
               <h1 className="hero-title">{activeMovie.title}</h1>
               <p className="hero-overview">{activeMovie.overview}</p>
               <div className="hero-actions">
-                <button className="btn-info">More Info</button>
+                <Link to={`/movie/${activeMovie.id}`} className="btn-info">More Info</Link>
               </div>
             </div>
 
@@ -149,7 +149,7 @@ export function Home() {
           <h2 className="section-title">Popular Series</h2>
           <div className="movies-grid">
             {popularSeries.slice(0, showAllSeries ? popularSeries.length : 6).map(series => (
-              <div key={series.id} className="movie-card">
+              <Link key={series.id} to={`/tv/${series.id}`} className="movie-card">
                 <img
                   src={`https://image.tmdb.org/t/p/w500${series.poster_path}`}
                   alt={series.name}
@@ -159,7 +159,7 @@ export function Home() {
                   <h3 className="movie-title">{series.name}</h3>
                   <p className="movie-rating">⭐ {series.vote_average.toFixed(1)}</p>
                 </div>
-              </div>
+              </Link>
             ))}
           </div>
           {popularSeries.length > 6 && (
@@ -173,7 +173,7 @@ export function Home() {
           <h2 className="section-title">Top Rated</h2>
           <div className="movies-grid">
             {topRatedMovies.slice(0, showAllTopRated ? topRatedMovies.length : 6).map(movie => (
-              <div key={movie.id} className="movie-card">
+              <Link key={movie.id} to={`/movie/${movie.id}`} className="movie-card">
                 <img
                   src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
                   alt={movie.title}
@@ -183,7 +183,7 @@ export function Home() {
                   <h3 className="movie-title">{movie.title}</h3>
                   <p className="movie-rating">⭐ {movie.vote_average.toFixed(1)}</p>
                 </div>
-              </div>
+              </Link>
             ))}
           </div>
           {topRatedMovies.length > 6 && (
@@ -198,7 +198,7 @@ export function Home() {
           <h2 className="section-title">Coming Soon</h2>
           <div className="movies-grid">
             {upcomingMovies.slice(0, showAllUpcoming ? upcomingMovies.length : 6).map(movie => (
-              <div key={movie.id} className="movie-card">
+              <Link key={movie.id} to={`/movie/${movie.id}`} className="movie-card">
                 <img
                   src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
                   alt={movie.title}
@@ -208,7 +208,7 @@ export function Home() {
                   <h3 className="movie-title">{movie.title}</h3>
                   <p className="movie-release">{new Date(movie.release_date).getFullYear()}</p>
                 </div>
-              </div>
+              </Link>
             ))}
           </div>
           {upcomingMovies.length > 6 && (
@@ -225,7 +225,7 @@ export function Home() {
 export function Header() {
   return (
     <header>
-      <img src={logo} alt="Logo de Dataflix" />
+      <Link to="/"><img src={logo} alt="Logo de Dataflix" /></Link>
       <nav>
         <button id='search'>Search</button>
         <NavLink to="/" className="nav-item">Home</NavLink>

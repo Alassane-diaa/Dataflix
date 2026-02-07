@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { fetchMoviesData } from './Fetcher.jsx';
 import './Movies.css';
 
@@ -34,7 +35,7 @@ export default function Movies() {
         <h2 className="section-title">Popular Movies</h2>
         <div className="movies-grid">
           {popularMovies.slice(0, showAllPopular ? popularMovies.length : 12).map(movie => (
-            <div key={movie.id} className="movie-card">
+            <Link key={movie.id} to={`/movie/${movie.id}`} className="movie-card">
               <img
                 src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
                 alt={movie.title}
@@ -44,7 +45,7 @@ export default function Movies() {
                 <h3 className="movie-title">{movie.title}</h3>
                 <p className="movie-rating">⭐ {movie.vote_average.toFixed(1)}</p>
               </div>
-            </div>
+            </Link>
           ))}
         </div>
         {popularMovies.length > 12 && (
@@ -58,7 +59,7 @@ export default function Movies() {
         <h2 className="section-title">Top Rated Movies</h2>
         <div className="movies-grid">
           {topRatedMovies.slice(0, showAllTopRated ? topRatedMovies.length : 12).map(movie => (
-            <div key={movie.id} className="movie-card">
+            <Link key={movie.id} to={`/movie/${movie.id}`} className="movie-card">
               <img
                 src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
                 alt={movie.title}
@@ -68,7 +69,7 @@ export default function Movies() {
                 <h3 className="movie-title">{movie.title}</h3>
                 <p className="movie-rating">⭐ {movie.vote_average.toFixed(1)}</p>
               </div>
-            </div>
+            </Link>
           ))}
         </div>
         {topRatedMovies.length > 12 && (
@@ -82,7 +83,7 @@ export default function Movies() {
         <h2 className="section-title">Now Playing</h2>
         <div className="movies-grid">
           {nowPlayingMovies.slice(0, showAllNowPlaying ? nowPlayingMovies.length : 12).map(movie => (
-            <div key={movie.id} className="movie-card">
+            <Link key={movie.id} to={`/movie/${movie.id}`} className="movie-card">
               <img
                 src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
                 alt={movie.title}
@@ -92,7 +93,7 @@ export default function Movies() {
                 <h3 className="movie-title">{movie.title}</h3>
                 <p className="movie-rating">⭐ {movie.vote_average.toFixed(1)}</p>
               </div>
-            </div>
+            </Link>
           ))}
         </div>
         {nowPlayingMovies.length > 12 && (
@@ -106,7 +107,7 @@ export default function Movies() {
         <h2 className="section-title">Upcoming</h2>
         <div className="movies-grid">
           {upcomingMovies.slice(0, showAllUpcoming ? upcomingMovies.length : 12).map(movie => (
-            <div key={movie.id} className="movie-card">
+            <Link key={movie.id} to={`/movie/${movie.id}`} className="movie-card">
               <img
                 src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
                 alt={movie.title}
@@ -116,7 +117,7 @@ export default function Movies() {
                 <h3 className="movie-title">{movie.title}</h3>
                 <p className="movie-release">{new Date(movie.release_date).getFullYear()}</p>
               </div>
-            </div>
+            </Link>
           ))}
         </div>
         {upcomingMovies.length > 12 && (

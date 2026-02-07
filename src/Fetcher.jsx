@@ -89,3 +89,30 @@ export const fetchSeriesData = async () => {
     return null;
   }
 };
+
+export const fetchItemDetails = async (type, id) => {
+  const options = {
+    method: 'GET',
+    headers: {
+      accept: 'application/json',
+      Authorization: `Bearer ${import.meta.env.VITE_TMDB_TOKEN}`
+    }
+  };
+
+  try {
+    const endpoint = type === 'movie' ? 'movie' : 'tv';
+    const response = await fetch(
+      `${import.meta.env.VITE_TMDB_BASE_URL}/${endpoint}/${id}?language=fr-FR&append_to_response=credits`,
+      options
+    );
+    
+    if (!response.ok) {
+      throw new Error('Item not found');
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error("Erreur Item Details:", error);
+    return null;
+  }
+};
