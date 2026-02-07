@@ -60,3 +60,32 @@ export const fetchMoviesData = async () => {
     return null;
   }
 };
+
+export const fetchSeriesData = async () => {
+  const options = {
+    method: 'GET',
+    headers: {
+      accept: 'application/json',
+      Authorization: `Bearer ${import.meta.env.VITE_TMDB_TOKEN}`
+    }
+  };
+
+  try {
+    const [popular, topRated, airingToday, onTheAir] = await Promise.all([
+      fetch(`${import.meta.env.VITE_TMDB_BASE_URL}/tv/popular?language=fr-FR`, options).then(res => res.json()),
+      fetch(`${import.meta.env.VITE_TMDB_BASE_URL}/tv/top_rated?language=fr-FR`, options).then(res => res.json()),
+      fetch(`${import.meta.env.VITE_TMDB_BASE_URL}/tv/airing_today?language=fr-FR`, options).then(res => res.json()),
+      fetch(`${import.meta.env.VITE_TMDB_BASE_URL}/tv/on_the_air?language=fr-FR`, options).then(res => res.json()),
+    ]);
+
+    return {
+      popular: popular.results,
+      topRated: topRated.results,
+      airingToday: airingToday.results,
+      onTheAir: onTheAir.results
+    };
+  } catch (error) {
+    console.error("Erreur Series Data:", error);
+    return null;
+  }
+};
