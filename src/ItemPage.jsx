@@ -1,6 +1,9 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { fetchItemDetails } from './Fetcher.jsx';
+import { isFavorited, toggleFavorite } from './favoritesUtils.js';
+import heartIcon from './assets/heart-icon.png';
+import heartFilledIcon from './assets/heart-filled-icon.png';
 import './ItemPage.css';
 
 export default function ItemPage() {
@@ -8,6 +11,7 @@ export default function ItemPage() {
   const navigate = useNavigate();
   const [item, setItem] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [isFav, setIsFav] = useState(false);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -15,17 +19,18 @@ export default function ItemPage() {
     fetchItemDetails(type, id).then(data => {
       if (data) {
         setItem(data);
+        setIsFav(isFavorited(type, id));
       }
       setLoading(false);
     });
   }, [type, id]);
 
   if (loading) {
-    return <div className="item-page loading">Chargement...</div>;
+    return <div className="item-page loading">Loading...</div>;
   }
 
   if (!item) {
-    return <div className="item-page error">Élément introuvable</div>;
+    return <div className="item-page error">Item not found</div>;
   }
 
   const title = item.title || item.name;
@@ -35,7 +40,22 @@ export default function ItemPage() {
   return (
     <div className="item-page">
       <button className="back-button" onClick={() => navigate(-1)}>
-        ← Retour
+        ← Back
+      </button>
+      <button 
+        className={`favorite-button ${isFav ? 'favorited' : ''}`}
+        onClick={() => {
+          toggleFavorite(type, id, title, item.poster_path);
+          setIsFav(!isFav);
+        }}
+        title={isFav ? 'Remove from favorites' : 'Add to favorites'}
+      >
+        <img 
+          src={isFav ? heartFilledIcon : heartIcon} 
+          alt={isFav ? 'Remove' : 'Add'}
+          className="favorite-button-icon"
+        />
+        {isFav ? 'Favorited' : 'Add to Favorites'}
       </button>
 
       <div 
@@ -62,9 +82,9 @@ export default function ItemPage() {
                 <span className="meta-item">{new Date(releaseDate).getFullYear()}</span>
               )}
               {runtime && (
-                <span className="meta-item">{runtime} min</span>
+                <span className="meta-item">{runtime} minutes</span>
               )}
-              <span className="meta-item rating">⭐ {item.vote_average.toFixed(1)}/10</span>
+              <span className="meta-item rating">★ {item.vote_average.toFixed(1)}/10</span>
             </div>
 
             {item.genres && item.genres.length > 0 && (
@@ -78,13 +98,13 @@ export default function ItemPage() {
             <p className="item-tagline">{item.tagline}</p>
             
             <div className="item-overview">
-              <h2>Synopsis</h2>
-              <p>{item.overview || 'Aucun synopsis disponible.'}</p>
+              <h2>Overview</h2>
+              <p>{item.overview || 'No overview available.'}</p>
             </div>
 
             {item.credits && item.credits.cast && item.credits.cast.length > 0 && (
               <div className="item-cast">
-                <h2>Distribution</h2>
+                <h2>Cast</h2>
                 <div className="cast-list">
                   {item.credits.cast.slice(0, 6).map(actor => (
                     <div key={actor.id} className="cast-member">
@@ -109,8 +129,8 @@ export default function ItemPage() {
 
             {type === 'tv' && item.seasons && (
               <div className="item-seasons">
-                <h2>Saisons ({item.number_of_seasons})</h2>
-                <p className="seasons-info">{item.number_of_episodes} épisodes au total</p>
+                <h2>Seasons ({item.number_of_seasons})</h2>
+                <p className="seasons-info">{item.number_of_episodes} episodes total</p>
               </div>
             )}
 

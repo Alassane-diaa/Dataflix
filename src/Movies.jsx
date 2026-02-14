@@ -1,29 +1,78 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { fetchMoviesData } from './Fetcher.jsx';
+import { fetchMoviesData, fetchByGenre, fetchByActor } from './Fetcher.jsx';
+import FilterPanel from './FilterPanel.jsx';
 import './Movies.css';
 
 export default function Movies() {
-  const [popularMovies, setPopularMovies] = useState([]);
-  const [topRatedMovies, setTopRatedMovies] = useState([]);
-  const [nowPlayingMovies, setNowPlayingMovies] = useState([]);
-  const [upcomingMovies, setUpcomingMovies] = useState([]);
+  const [movies, setMovies] = useState([]);
+  const [selectedGenre, setSelectedGenre] = useState(null);
+  const [selectedActor, setSelectedActor] = useState(null);
+  const [sortBy, setSortBy] = useState('popularity.desc');
+  const [loading, setLoading] = useState(true);
+  const [hasFilters, setHasFilters] = useState(false);
 
-  const [showAllPopular, setShowAllPopular] = useState(false);
-  const [showAllTopRated, setShowAllTopRated] = useState(false);
-  const [showAllNowPlaying, setShowAllNowPlaying] = useState(false);
-  const [showAllUpcoming, setShowAllUpcoming] = useState(false);
-
+  // Load initial data
   useEffect(() => {
+    setLoading(true);
     fetchMoviesData().then(data => {
       if (data) {
-        setPopularMovies(data.popular);
-        setTopRatedMovies(data.topRated);
-        setNowPlayingMovies(data.nowPlaying);
-        setUpcomingMovies(data.upcoming);
+        const allMovies = [...data.popular, ...data.topRated, ...data.nowPlaying, ...data.upcoming];
+        // Remove duplicates
+        const uniqueMovies = Array.from(new Map(allMovies.map(m => [m.id, m])).values());
+        // Sort by popularity
+        uniqueMovies.sort((a, b) => b.popularity - a.popularity);
+        setMovies(uniqueMovies);
       }
+      setLoading(false);
     });
   }, []);
+
+  // Apply filters
+  useEffect(() => {
+    if (!selectedGenre && !selectedActor) {
+      setHasFilters(false);
+      return;
+    }
+
+    setHasFilters(true);
+    setLoading(true);
+
+    const fetchFilteredData = async () => {
+      let data;
+      
+      if (selectedActor?.id) {
+        data = await fetchByActor('movie', selectedActor.id, sortBy);
+      } else if (selectedGenre) {
+        data = await fetchByGenre('movie', selectedGenre, sortBy);
+      }
+
+      if (data && data.results) {
+        setMovies(data.results);
+      }
+      setLoading(false);
+    };
+
+    fetchFilteredData();
+  }, [selectedGenre, selectedActor, sortBy]);
+
+  const handleGenreChange = (genreId) => {
+    setSelectedGenre(genreId || null);
+    setSelectedActor(null); // Reset actor when changing genre
+  };
+
+  const handleActorChange = (actorId, actorName) => {
+    if (actorId) {
+      setSelectedActor({ id: actorId, name: actorName });
+      setSelectedGenre(null); // Reset genre when changing actor
+    } else {
+      setSelectedActor(null);
+    }
+  };
+
+  const handleSortChange = (newSort) => {
+    setSortBy(newSort);
+  };
 
   return (
     <div id="movies">
@@ -31,101 +80,52 @@ export default function Movies() {
         <h1>Movies</h1>
       </div>
 
-      <section className="movies-section">
-        <h2 className="section-title">Popular Movies</h2>
-        <div className="movies-grid">
-          {popularMovies.slice(0, showAllPopular ? popularMovies.length : 12).map(movie => (
-            <Link key={movie.id} to={`/movie/${movie.id}`} className="movie-card">
-              <img
-                src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
-                alt={movie.title}
-                className="movie-poster"
-              />
-              <div className="movie-info">
-                <h3 className="movie-title">{movie.title}</h3>
-                <p className="movie-rating">⭐ {movie.vote_average.toFixed(1)}</p>
-              </div>
-            </Link>
-          ))}
-        </div>
-        {popularMovies.length > 12 && (
-          <button className="btn-show-more" onClick={() => setShowAllPopular(!showAllPopular)}>
-            {showAllPopular ? 'Afficher moins' : 'Afficher plus'}
-          </button>
-        )}
-      </section>
+      <FilterPanel 
+        type="movie"
+        onGenreChange={handleGenreChange}
+        onActorChange={handleActorChange}
+        onSortChange={handleSortChange}
+        selectedGenre={selectedGenre}
+        selectedActor={selectedActor}
+        sortBy={sortBy}
+      />
 
-      <section className="movies-section">
-        <h2 className="section-title">Top Rated Movies</h2>
-        <div className="movies-grid">
-          {topRatedMovies.slice(0, showAllTopRated ? topRatedMovies.length : 12).map(movie => (
-            <Link key={movie.id} to={`/movie/${movie.id}`} className="movie-card">
-              <img
-                src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
-                alt={movie.title}
-                className="movie-poster"
-              />
-              <div className="movie-info">
-                <h3 className="movie-title">{movie.title}</h3>
-                <p className="movie-rating">⭐ {movie.vote_average.toFixed(1)}</p>
-              </div>
-            </Link>
-          ))}
-        </div>
-        {topRatedMovies.length > 12 && (
-          <button className="btn-show-more" onClick={() => setShowAllTopRated(!showAllTopRated)}>
-            {showAllTopRated ? 'Afficher moins' : 'Afficher plus'}
-          </button>
-        )}
-      </section>
+      {loading && <p className="loading-text">Loading...</p>}
 
-      <section className="movies-section">
-        <h2 className="section-title">Now Playing</h2>
-        <div className="movies-grid">
-          {nowPlayingMovies.slice(0, showAllNowPlaying ? nowPlayingMovies.length : 12).map(movie => (
-            <Link key={movie.id} to={`/movie/${movie.id}`} className="movie-card">
-              <img
-                src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
-                alt={movie.title}
-                className="movie-poster"
-              />
-              <div className="movie-info">
-                <h3 className="movie-title">{movie.title}</h3>
-                <p className="movie-rating">⭐ {movie.vote_average.toFixed(1)}</p>
-              </div>
-            </Link>
-          ))}
+      {!loading && movies.length === 0 && (
+        <div className="movies-section">
+          <p className="no-results">No movies found. Try different filters.</p>
         </div>
-        {nowPlayingMovies.length > 12 && (
-          <button className="btn-show-more" onClick={() => setShowAllNowPlaying(!showAllNowPlaying)}>
-            {showAllNowPlaying ? 'Afficher moins' : 'Afficher plus'}
-          </button>
-        )}
-      </section>
+      )}
 
-      <section className="movies-section">
-        <h2 className="section-title">Upcoming</h2>
-        <div className="movies-grid">
-          {upcomingMovies.slice(0, showAllUpcoming ? upcomingMovies.length : 12).map(movie => (
-            <Link key={movie.id} to={`/movie/${movie.id}`} className="movie-card">
-              <img
-                src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
-                alt={movie.title}
-                className="movie-poster"
-              />
-              <div className="movie-info">
-                <h3 className="movie-title">{movie.title}</h3>
-                <p className="movie-release">{new Date(movie.release_date).getFullYear()}</p>
-              </div>
-            </Link>
-          ))}
-        </div>
-        {upcomingMovies.length > 12 && (
-          <button className="btn-show-more" onClick={() => setShowAllUpcoming(!showAllUpcoming)}>
-            {showAllUpcoming ? 'Afficher moins' : 'Afficher plus'}
-          </button>
-        )}
-      </section>
+      {!loading && movies.length > 0 && (
+        <section className="movies-section">
+          {hasFilters && selectedGenre && (
+            <h2 className="section-title">Filtered Results</h2>
+          )}
+          {hasFilters && selectedActor && (
+            <h2 className="section-title">Movies with {selectedActor.name}</h2>
+          )}
+          {!hasFilters && (
+            <h2 className="section-title">All Movies</h2>
+          )}
+          <div className="movies-grid">
+            {movies.map(movie => (
+              <Link key={movie.id} to={`/movie/${movie.id}`} className="movie-card">
+                <img
+                  src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
+                  alt={movie.title}
+                  className="movie-poster"
+                />
+                <div className="movie-info">
+                  <h3 className="movie-title">{movie.title}</h3>
+                  <p className="movie-rating">★ {movie.vote_average.toFixed(1)}</p>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </section>
+      )}
     </div>
   );
 }
