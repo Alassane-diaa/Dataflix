@@ -1,29 +1,78 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { fetchSeriesData } from './Fetcher.jsx';
+import { fetchSeriesData, fetchByGenre, fetchByActor } from './Fetcher.jsx';
+import FilterPanel from './FilterPanel.jsx';
 import './Series.css';
 
 export default function Series() {
-  const [popularSeries, setPopularSeries] = useState([]);
-  const [topRatedSeries, setTopRatedSeries] = useState([]);
-  const [airingTodaySeries, setAiringTodaySeries] = useState([]);
-  const [onTheAirSeries, setOnTheAirSeries] = useState([]);
+  const [series, setSeries] = useState([]);
+  const [selectedGenre, setSelectedGenre] = useState(null);
+  const [selectedActor, setSelectedActor] = useState(null);
+  const [sortBy, setSortBy] = useState('popularity.desc');
+  const [loading, setLoading] = useState(true);
+  const [hasFilters, setHasFilters] = useState(false);
 
-  const [showAllPopular, setShowAllPopular] = useState(false);
-  const [showAllTopRated, setShowAllTopRated] = useState(false);
-  const [showAllAiringToday, setShowAllAiringToday] = useState(false);
-  const [showAllOnTheAir, setShowAllOnTheAir] = useState(false);
-
+  // Load initial data
   useEffect(() => {
+    setLoading(true);
     fetchSeriesData().then(data => {
       if (data) {
-        setPopularSeries(data.popular);
-        setTopRatedSeries(data.topRated);
-        setAiringTodaySeries(data.airingToday);
-        setOnTheAirSeries(data.onTheAir);
+        const allSeries = [...data.popular, ...data.topRated, ...data.airingToday, ...data.onTheAir];
+        // Remove duplicates
+        const uniqueSeries = Array.from(new Map(allSeries.map(s => [s.id, s])).values());
+        // Sort by popularity
+        uniqueSeries.sort((a, b) => b.popularity - a.popularity);
+        setSeries(uniqueSeries);
       }
+      setLoading(false);
     });
   }, []);
+
+  // Apply filters
+  useEffect(() => {
+    if (!selectedGenre && !selectedActor) {
+      setHasFilters(false);
+      return;
+    }
+
+    setHasFilters(true);
+    setLoading(true);
+
+    const fetchFilteredData = async () => {
+      let data;
+      
+      if (selectedActor?.id) {
+        data = await fetchByActor('tv', selectedActor.id, sortBy);
+      } else if (selectedGenre) {
+        data = await fetchByGenre('tv', selectedGenre, sortBy);
+      }
+
+      if (data && data.results) {
+        setSeries(data.results);
+      }
+      setLoading(false);
+    };
+
+    fetchFilteredData();
+  }, [selectedGenre, selectedActor, sortBy]);
+
+  const handleGenreChange = (genreId) => {
+    setSelectedGenre(genreId || null);
+    setSelectedActor(null); // Reset actor when changing genre
+  };
+
+  const handleActorChange = (actorId, actorName) => {
+    if (actorId) {
+      setSelectedActor({ id: actorId, name: actorName });
+      setSelectedGenre(null); // Reset genre when changing actor
+    } else {
+      setSelectedActor(null);
+    }
+  };
+
+  const handleSortChange = (newSort) => {
+    setSortBy(newSort);
+  };
 
   return (
     <div id="series">
@@ -31,101 +80,52 @@ export default function Series() {
         <h1>TV Series</h1>
       </div>
 
-      <section className="series-section">
-        <h2 className="section-title">Popular Series</h2>
-        <div className="series-grid">
-          {popularSeries.slice(0, showAllPopular ? popularSeries.length : 12).map(series => (
-            <Link key={series.id} to={`/tv/${series.id}`} className="series-card">
-              <img
-                src={`https://image.tmdb.org/t/p/w500${series.poster_path}`}
-                alt={series.name}
-                className="series-poster"
-              />
-              <div className="series-info">
-                <h3 className="series-title">{series.name}</h3>
-                <p className="series-rating">⭐ {series.vote_average.toFixed(1)}</p>
-              </div>
-            </Link>
-          ))}
-        </div>
-        {popularSeries.length > 12 && (
-          <button className="btn-show-more" onClick={() => setShowAllPopular(!showAllPopular)}>
-            {showAllPopular ? 'Afficher moins' : 'Afficher plus'}
-          </button>
-        )}
-      </section>
+      <FilterPanel 
+        type="tv"
+        onGenreChange={handleGenreChange}
+        onActorChange={handleActorChange}
+        onSortChange={handleSortChange}
+        selectedGenre={selectedGenre}
+        selectedActor={selectedActor}
+        sortBy={sortBy}
+      />
 
-      <section className="series-section">
-        <h2 className="section-title">Top Rated Series</h2>
-        <div className="series-grid">
-          {topRatedSeries.slice(0, showAllTopRated ? topRatedSeries.length : 12).map(series => (
-            <Link key={series.id} to={`/tv/${series.id}`} className="series-card">
-              <img
-                src={`https://image.tmdb.org/t/p/w500${series.poster_path}`}
-                alt={series.name}
-                className="series-poster"
-              />
-              <div className="series-info">
-                <h3 className="series-title">{series.name}</h3>
-                <p className="series-rating">⭐ {series.vote_average.toFixed(1)}</p>
-              </div>
-            </Link>
-          ))}
-        </div>
-        {topRatedSeries.length > 12 && (
-          <button className="btn-show-more" onClick={() => setShowAllTopRated(!showAllTopRated)}>
-            {showAllTopRated ? 'Afficher moins' : 'Afficher plus'}
-          </button>
-        )}
-      </section>
+      {loading && <p className="loading-text">Loading...</p>}
 
-      <section className="series-section">
-        <h2 className="section-title">Airing Today</h2>
-        <div className="series-grid">
-          {airingTodaySeries.slice(0, showAllAiringToday ? airingTodaySeries.length : 12).map(series => (
-            <Link key={series.id} to={`/tv/${series.id}`} className="series-card">
-              <img
-                src={`https://image.tmdb.org/t/p/w500${series.poster_path}`}
-                alt={series.name}
-                className="series-poster"
-              />
-              <div className="series-info">
-                <h3 className="series-title">{series.name}</h3>
-                <p className="series-rating">⭐ {series.vote_average.toFixed(1)}</p>
-              </div>
-            </Link>
-          ))}
+      {!loading && series.length === 0 && (
+        <div className="series-section">
+          <p className="no-results">No TV series found. Try different filters.</p>
         </div>
-        {airingTodaySeries.length > 12 && (
-          <button className="btn-show-more" onClick={() => setShowAllAiringToday(!showAllAiringToday)}>
-            {showAllAiringToday ? 'Afficher moins' : 'Afficher plus'}
-          </button>
-        )}
-      </section>
+      )}
 
-      <section className="series-section">
-        <h2 className="section-title">On The Air</h2>
-        <div className="series-grid">
-          {onTheAirSeries.slice(0, showAllOnTheAir ? onTheAirSeries.length : 12).map(series => (
-            <Link key={series.id} to={`/tv/${series.id}`} className="series-card">
-              <img
-                src={`https://image.tmdb.org/t/p/w500${series.poster_path}`}
-                alt={series.name}
-                className="series-poster"
-              />
-              <div className="series-info">
-                <h3 className="series-title">{series.name}</h3>
-                <p className="series-rating">⭐ {series.vote_average.toFixed(1)}</p>
-              </div>
-            </Link>
-          ))}
-        </div>
-        {onTheAirSeries.length > 12 && (
-          <button className="btn-show-more" onClick={() => setShowAllOnTheAir(!showAllOnTheAir)}>
-            {showAllOnTheAir ? 'Afficher moins' : 'Afficher plus'}
-          </button>
-        )}
-      </section>
+      {!loading && series.length > 0 && (
+        <section className="series-section">
+          {hasFilters && selectedGenre && (
+            <h2 className="section-title">Filtered Results</h2>
+          )}
+          {hasFilters && selectedActor && (
+            <h2 className="section-title">Series with {selectedActor.name}</h2>
+          )}
+          {!hasFilters && (
+            <h2 className="section-title">All TV Series</h2>
+          )}
+          <div className="series-grid">
+            {series.map(s => (
+              <Link key={s.id} to={`/tv/${s.id}`} className="series-card">
+                <img
+                  src={`https://image.tmdb.org/t/p/w500${s.poster_path}`}
+                  alt={s.name}
+                  className="series-poster"
+                />
+                <div className="series-info">
+                  <h3 className="series-title">{s.name}</h3>
+                  <p className="series-rating">★ {s.vote_average.toFixed(1)}</p>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </section>
+      )}
     </div>
   );
 }

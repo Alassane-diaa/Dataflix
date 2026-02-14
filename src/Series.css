@@ -103,6 +103,28 @@
   border-color: rgba(255, 255, 255, 0.5);
 }
 
+.loading-text {
+  text-align: center;
+  padding: 3rem 4%;
+  font-size: 1.2rem;
+  color: #b3b3b3;
+  min-height: 300px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.no-results {
+  text-align: center;
+  padding: 3rem 4%;
+  font-size: 1.2rem;
+  color: #b3b3b3;
+  min-height: 300px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 /* Responsive */
 @media (max-width: 1200px) {
   .series-grid {

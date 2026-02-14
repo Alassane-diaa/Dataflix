@@ -116,3 +116,92 @@ export const fetchItemDetails = async (type, id) => {
     return null;
   }
 };
+
+// Fetch genres for movies or TV series
+export const fetchGenres = async (type) => {
+  const options = {
+    method: 'GET',
+    headers: {
+      accept: 'application/json',
+      Authorization: `Bearer ${import.meta.env.VITE_TMDB_TOKEN}`
+    }
+  };
+
+  try {
+    const endpoint = type === 'movie' ? 'movie' : 'tv';
+    const response = await fetch(
+      `${import.meta.env.VITE_TMDB_BASE_URL}/genre/${endpoint}/list?language=en-US`,
+      options
+    );
+    return await response.json();
+  } catch (error) {
+    console.error('Error fetching genres:', error);
+    return null;
+  }
+};
+
+// Fetch movies/series filtered by genre
+export const fetchByGenre = async (type, genreId, sortBy = 'popularity.desc', page = 1) => {
+  const options = {
+    method: 'GET',
+    headers: {
+      accept: 'application/json',
+      Authorization: `Bearer ${import.meta.env.VITE_TMDB_TOKEN}`
+    }
+  };
+
+  try {
+    const response = await fetch(
+      `${import.meta.env.VITE_TMDB_BASE_URL}/discover/${type}?with_genres=${genreId}&sort_by=${sortBy}&language=en-US&page=${page}`,
+      options
+    );
+    return await response.json();
+  } catch (error) {
+    console.error('Error fetching by genre:', error);
+    return null;
+  }
+};
+
+// Search for an actor
+export const searchActor = async (query) => {
+  const options = {
+    method: 'GET',
+    headers: {
+      accept: 'application/json',
+      Authorization: `Bearer ${import.meta.env.VITE_TMDB_TOKEN}`
+    }
+  };
+
+  try {
+    const response = await fetch(
+      `${import.meta.env.VITE_TMDB_BASE_URL}/search/person?query=${encodeURIComponent(query)}&language=en-US`,
+      options
+    );
+    return await response.json();
+  } catch (error) {
+    console.error('Error searching actor:', error);
+    return null;
+  }
+};
+
+// Fetch movies/series with a specific actor
+export const fetchByActor = async (type, actorId, sortBy = 'popularity.desc', page = 1) => {
+  const options = {
+    method: 'GET',
+    headers: {
+      accept: 'application/json',
+      Authorization: `Bearer ${import.meta.env.VITE_TMDB_TOKEN}`
+    }
+  };
+
+  try {
+    const response = await fetch(
+      `${import.meta.env.VITE_TMDB_BASE_URL}/discover/${type}?with_cast=${actorId}&sort_by=${sortBy}&language=en-US&page=${page}`,
+      options
+    );
+    return await response.json();
+  } catch (error) {
+    console.error('Error fetching by actor:', error);
+    return null;
+  }
+};
