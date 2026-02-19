@@ -5,20 +5,19 @@ export const getFavorites = () => {
 };
 
 // Check if an item is favorited
-export const isFavorited = (type, id) => {
+export const isFavorite = (type, id) => {
   const favorites = getFavorites();
   return favorites.some(fav => fav.type === type && fav.id === parseInt(id));
 };
 
 // Add item to favorites
-export const addFavorite = (type, id, title, posterPath) => {
+export const addFavorite = ({ type, id, title, posterPath }) => {
   const favorites = getFavorites();
-  
-  // Check if already exists
-  if (isFavorited(type, id)) {
+
+  if (isFavorite(type, id)) {
     return favorites;
   }
-  
+
   const newFavorite = {
     type,
     id: parseInt(id),
@@ -26,7 +25,7 @@ export const addFavorite = (type, id, title, posterPath) => {
     posterPath,
     addedAt: new Date().toISOString()
   };
-  
+
   favorites.push(newFavorite);
   localStorage.setItem('dataflix_favorites', JSON.stringify(favorites));
   return favorites;
@@ -42,9 +41,12 @@ export const removeFavorite = (type, id) => {
 
 // Toggle favorite
 export const toggleFavorite = (type, id, title, posterPath) => {
-  if (isFavorited(type, id)) {
+  if (isFavorite(type, id)) {
     return removeFavorite(type, id);
   } else {
-    return addFavorite(type, id, title, posterPath);
+    return addFavorite({ type, id, title, posterPath });
   }
 };
+
+// Legacy export for backwards compatibility
+export const isFavorited = isFavorite;
