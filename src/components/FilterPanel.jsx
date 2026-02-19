@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { fetchGenres, searchActor } from './Fetcher.jsx';
+import { fetchGenres, searchActor } from '../services/Fetcher.js';
 import './FilterPanel.css';
 
 export default function FilterPanel({ 

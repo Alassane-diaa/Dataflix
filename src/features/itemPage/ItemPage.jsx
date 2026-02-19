@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { fetchItemDetails } from './Fetcher.jsx';
-import { isFavorited, toggleFavorite } from './favoritesUtils.js';
-import heartIcon from './assets/heart-icon.png';
-import heartFilledIcon from './assets/heart-filled-icon.png';
+import { fetchItemDetails } from '../../services/Fetcher.js';
+import { isFavorited, toggleFavorite } from '../favorites/favoritesUtils.js';
+import heartIcon from '../../assets/heart-icon.png';
+import heartFilledIcon from '../../assets/heart-filled-icon.png';
 import './ItemPage.css';
 
 export default function ItemPage() {

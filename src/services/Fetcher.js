@@ -1,5 +1,3 @@
-import { useState } from "react";
-
 const TMDB_BASE_URL = import.meta.env.VITE_TMDB_BASE_URL;
 const TMDB_TOKEN = import.meta.env.VITE_TMDB_TOKEN;
 
