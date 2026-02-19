@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
-import { NavLink, Link } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { fetchHomeData } from './services/Fetcher.js'
+import ItemCard from './components/ItemCard.jsx'
 import './App.css'
 
 export default function Home() {
@@ -146,19 +147,9 @@ export default function Home() {
 
         <section className="content-section" ref={seriesRef}>
           <h2 className="section-title">Popular Series</h2>
-          <div className="movies-grid">
+          <div className="card-grid">
             {popularSeries.slice(0, showAllSeries ? popularSeries.length : 6).map(series => (
-              <Link key={series.id} to={`/tv/${series.id}`} className="movie-card">
-                <img
-                  src={`https://image.tmdb.org/t/p/w500${series.poster_path}`}
-                  alt={series.name}
-                  className="movie-poster"
-                />
-                <div className="movie-info">
-                  <h3 className="movie-title">{series.name}</h3>
-                  <p className="movie-rating">⭐ {series.vote_average.toFixed(1)}</p>
-                </div>
-              </Link>
+              <ItemCard key={series.id} item={series} type="tv" />
             ))}
           </div>
           {popularSeries.length > 6 && (
@@ -170,19 +161,9 @@ export default function Home() {
 
         <section className="content-section" ref={topRatedRef}>
           <h2 className="section-title">Top Rated</h2>
-          <div className="movies-grid">
+          <div className="card-grid">
             {topRatedMovies.slice(0, showAllTopRated ? topRatedMovies.length : 6).map(movie => (
-              <Link key={movie.id} to={`/movie/${movie.id}`} className="movie-card">
-                <img
-                  src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
-                  alt={movie.title}
-                  className="movie-poster"
-                />
-                <div className="movie-info">
-                  <h3 className="movie-title">{movie.title}</h3>
-                  <p className="movie-rating">⭐ {movie.vote_average.toFixed(1)}</p>
-                </div>
-              </Link>
+              <ItemCard key={movie.id} item={movie} type="movie" />
             ))}
           </div>
           {topRatedMovies.length > 6 && (
@@ -195,19 +176,9 @@ export default function Home() {
         {/* Section Upcoming */}
         <section className="content-section" ref={upcomingRef}>
           <h2 className="section-title">Coming Soon</h2>
-          <div className="movies-grid">
+          <div className="card-grid">
             {upcomingMovies.slice(0, showAllUpcoming ? upcomingMovies.length : 6).map(movie => (
-              <Link key={movie.id} to={`/movie/${movie.id}`} className="movie-card">
-                <img
-                  src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
-                  alt={movie.title}
-                  className="movie-poster"
-                />
-                <div className="movie-info">
-                  <h3 className="movie-title">{movie.title}</h3>
-                  <p className="movie-release">{new Date(movie.release_date).getFullYear()}</p>
-                </div>
-              </Link>
+              <ItemCard key={movie.id} item={movie} type="movie" />
             ))}
           </div>
           {upcomingMovies.length > 6 && (
