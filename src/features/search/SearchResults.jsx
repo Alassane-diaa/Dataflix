@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
-import { useSearchParams, Link } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 import { searchMulti } from '../../services/Fetcher.js';
+import ItemCard from '../../components/ItemCard.jsx';
 import './SearchResults.css';
 
 export default function SearchResults() {
@@ -29,17 +30,8 @@ export default function SearchResults() {
     });
   }, [query]);
 
-  const getTitle = (item) => {
-    return item.media_type === 'movie' ? item.title : item.name;
-  };
-
-  const getYear = (item) => {
-    const date = item.media_type === 'movie' ? item.release_date : item.first_air_date;
-    return date ? new Date(date).getFullYear() : '';
-  };
-
   return (
-    <div id="search-results">
+    <div className="page-container">
       <div className="search-header">
         <h1>
           {query ? `Résultats pour "${query}"` : 'Recherche'}
@@ -66,39 +58,13 @@ export default function SearchResults() {
 
       {!loading && results.length > 0 && (
         <section className="results-grid-section">
-          <div className="results-grid">
+          <div className="card-grid">
             {results.map(item => (
-              <Link
-                key={`${item.media_type}-${item.id}`}
-                to={`/${item.media_type}/${item.id}`}
-                className="result-card"
-              >
-                {item.poster_path ? (
-                  <img
-                    src={`https://image.tmdb.org/t/p/w500${item.poster_path}`}
-                    alt={getTitle(item)}
-                    className="result-poster"
-                  />
-                ) : (
-                  <div className="result-poster-placeholder">
-                    <span>Pas d'image</span>
-                  </div>
-                )}
-                <div className="result-info">
-                  <h3 className="result-title">{getTitle(item)}</h3>
-                  <div className="result-meta">
-                    <span className="result-type">
-                      {item.media_type === 'movie' ? 'Film' : 'Série'}
-                    </span>
-                    {getYear(item) && (
-                      <span className="result-year"> • {getYear(item)}</span>
-                    )}
-                  </div>
-                  {item.vote_average > 0 && (
-                    <p className="result-rating">★ {item.vote_average.toFixed(1)}</p>
-                  )}
-                </div>
-              </Link>
+              <ItemCard 
+                key={`${item.media_type}-${item.id}`} 
+                item={item} 
+                showMeta={true} 
+              />
             ))}
           </div>
         </section>

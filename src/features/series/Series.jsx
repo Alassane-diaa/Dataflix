@@ -1,8 +1,7 @@
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
 import { fetchSeriesData, fetchByGenre, fetchByActor } from '../../services/Fetcher.js';
 import FilterPanel from '../../components/FilterPanel.jsx';
-import './Series.css';
+import ItemCard from '../../components/ItemCard.jsx';
 
 export default function Series() {
   const [series, setSeries] = useState([]);
@@ -75,8 +74,8 @@ export default function Series() {
   };
 
   return (
-    <div id="series">
-      <div className="series-header">
+    <div className="page-container">
+      <div className="page-header">
         <h1>TV Series</h1>
       </div>
 
@@ -93,13 +92,13 @@ export default function Series() {
       {loading && <p className="loading-text">Loading...</p>}
 
       {!loading && series.length === 0 && (
-        <div className="series-section">
+        <div className="page-section">
           <p className="no-results">No TV series found. Try different filters.</p>
         </div>
       )}
 
       {!loading && series.length > 0 && (
-        <section className="series-section">
+        <section className="page-section">
           {hasFilters && selectedGenre && (
             <h2 className="section-title">Filtered Results</h2>
           )}
@@ -109,19 +108,9 @@ export default function Series() {
           {!hasFilters && (
             <h2 className="section-title">All TV Series</h2>
           )}
-          <div className="series-grid">
+          <div className="card-grid">
             {series.map(s => (
-              <Link key={s.id} to={`/tv/${s.id}`} className="series-card">
-                <img
-                  src={`https://image.tmdb.org/t/p/w500${s.poster_path}`}
-                  alt={s.name}
-                  className="series-poster"
-                />
-                <div className="series-info">
-                  <h3 className="series-title">{s.name}</h3>
-                  <p className="series-rating">★ {s.vote_average.toFixed(1)}</p>
-                </div>
-              </Link>
+              <ItemCard key={s.id} item={s} type="tv" />
             ))}
           </div>
         </section>

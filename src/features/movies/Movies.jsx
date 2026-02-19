@@ -1,8 +1,7 @@
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
 import { fetchMoviesData, fetchByGenre, fetchByActor } from '../../services/Fetcher.js';
 import FilterPanel from '../../components/FilterPanel.jsx';
-import './Movies.css';
+import ItemCard from '../../components/ItemCard.jsx';
 
 export default function Movies() {
   const [movies, setMovies] = useState([]);
@@ -75,8 +74,8 @@ export default function Movies() {
   };
 
   return (
-    <div id="movies">
-      <div className="movies-header">
+    <div className="page-container">
+      <div className="page-header">
         <h1>Movies</h1>
       </div>
 
@@ -93,13 +92,13 @@ export default function Movies() {
       {loading && <p className="loading-text">Loading...</p>}
 
       {!loading && movies.length === 0 && (
-        <div className="movies-section">
+        <div className="page-section">
           <p className="no-results">No movies found. Try different filters.</p>
         </div>
       )}
 
       {!loading && movies.length > 0 && (
-        <section className="movies-section">
+        <section className="page-section">
           {hasFilters && selectedGenre && (
             <h2 className="section-title">Filtered Results</h2>
           )}
@@ -109,19 +108,9 @@ export default function Movies() {
           {!hasFilters && (
             <h2 className="section-title">All Movies</h2>
           )}
-          <div className="movies-grid">
+          <div className="card-grid">
             {movies.map(movie => (
-              <Link key={movie.id} to={`/movie/${movie.id}`} className="movie-card">
-                <img
-                  src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
-                  alt={movie.title}
-                  className="movie-poster"
-                />
-                <div className="movie-info">
-                  <h3 className="movie-title">{movie.title}</h3>
-                  <p className="movie-rating">★ {movie.vote_average.toFixed(1)}</p>
-                </div>
-              </Link>
+              <ItemCard key={movie.id} item={movie} type="movie" />
             ))}
           </div>
         </section>

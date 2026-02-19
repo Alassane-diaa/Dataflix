@@ -1,6 +1,8 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
+import './styles/global.css'
+import './styles/shared.css'
 import Home from './App.jsx'
 import Header from './components/Header.jsx'
 import Movies from './features/movies/Movies.jsx'
