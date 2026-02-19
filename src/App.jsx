@@ -1,10 +1,9 @@
 import { useState, useEffect, useRef } from 'react'
 import { NavLink, Link } from 'react-router-dom'
 import { fetchHomeData } from './services/Fetcher.js'
-import logo from './assets/logo.png'
 import './App.css'
 
-export function Home() {
+export default function Home() {
   const [trendingMovies, setTrendingMovies] = useState([])
   const [topRatedMovies, setTopRatedMovies] = useState([])
   const [upcomingMovies, setUpcomingMovies] = useState([])
@@ -219,20 +218,5 @@ export function Home() {
         </section>
       </main>
     </>
-  )
-}
-
-export function Header() {
-  return (
-    <header>
-      <Link to="/"><img src={logo} alt="Logo de Dataflix" /></Link>
-      <nav>
-        <button id='search'>Search</button>
-        <NavLink to="/" className="nav-item">Home</NavLink>
-        <NavLink to="/movies" className="nav-item">Movies</NavLink>
-        <NavLink to="/series" className="nav-item">Series</NavLink>
-        <NavLink to="/favorites" className="nav-item">My favorites</NavLink>
-      </nav>
-    </header>
   )
 }
