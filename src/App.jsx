@@ -1,8 +1,8 @@
 import { useState, useEffect, useRef } from 'react'
 import { NavLink, Link } from 'react-router-dom'
-import { fetchHomeData } from './Fetcher.jsx'
+import { fetchHomeData } from './services/Fetcher.js'
 import logo from './assets/logo.png'
-import './Home.css'
+import './App.css'
 
 export function Home() {
   const [trendingMovies, setTrendingMovies] = useState([])

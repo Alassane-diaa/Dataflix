@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { getFavorites, removeFavorite } from './favoritesUtils.js';
-import removeIcon from './assets/remove-icon.png';
+import removeIcon from '../../assets/remove-icon.png';
 import "./Favorites.css";
 
 export default function Favorites() {
