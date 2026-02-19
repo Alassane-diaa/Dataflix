@@ -203,3 +203,25 @@ export const fetchByActor = async (type, actorId, sortBy = 'popularity.desc', pa
     return null;
   }
 };
+
+// Search for movies and TV series (multi-search)
+export const searchMulti = async (query, page = 1) => {
+  const options = {
+    method: 'GET',
+    headers: {
+      accept: 'application/json',
+      Authorization: `Bearer ${import.meta.env.VITE_TMDB_TOKEN}`
+    }
+  };
+
+  try {
+    const response = await fetch(
+      `${import.meta.env.VITE_TMDB_BASE_URL}/search/multi?query=${encodeURIComponent(query)}&language=fr-FR&page=${page}`,
+      options
+    );
+    return await response.json();
+  } catch (error) {
+    console.error('Error searching:', error);
+    return null;
+  }
+};

@@ -7,6 +7,7 @@ import Movies from './features/movies/Movies.jsx'
 import Series from './features/series/Series.jsx'
 import Favorites from './features/favorites/Favorites.jsx'
 import ItemPage from './features/itemPage/ItemPage.jsx'
+import SearchResults from './features/search/SearchResults.jsx'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
@@ -17,6 +18,7 @@ createRoot(document.getElementById('root')).render(
         <Route path="/movies" element={<Movies />} />
         <Route path="/series" element={<Series />} />
         <Route path="/favorites" element={<Favorites />} />
+        <Route path="/search" element={<SearchResults />} />
         <Route path="/:type/:id" element={<ItemPage />} />
       </Routes>
     </BrowserRouter>
