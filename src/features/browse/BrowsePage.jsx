@@ -26,9 +26,27 @@ const CONFIG = {
   },
 };
 
+function sortLocally(arr, sortBy) {
+  const sorted = [...arr];
+  switch (sortBy) {
+    case 'popularity.asc':    sorted.sort((a, b) => a.popularity - b.popularity); break;
+    case 'vote_average.desc': sorted.sort((a, b) => b.vote_average - a.vote_average); break;
+    case 'vote_count.desc':   sorted.sort((a, b) => b.vote_count - a.vote_count); break;
+    case 'release_date.desc':
+      sorted.sort((a, b) => new Date(b.release_date || b.first_air_date || 0) - new Date(a.release_date || a.first_air_date || 0));
+      break;
+    case 'release_date.asc':
+      sorted.sort((a, b) => new Date(a.release_date || a.first_air_date || 0) - new Date(b.release_date || b.first_air_date || 0));
+      break;
+    default: sorted.sort((a, b) => b.popularity - a.popularity); break; // popularity.desc
+  }
+  return sorted;
+}
+
 export default function BrowsePage({ mediaType }) {
   const config = CONFIG[mediaType];
 
+  const [baseItems, setBaseItems] = useState([]);   // données brutes non filtrées
   const [items, setItems] = useState([]);
   const [selectedGenre, setSelectedGenre] = useState(null);
   const [selectedActor, setSelectedActor] = useState(null);
@@ -48,17 +66,18 @@ export default function BrowsePage({ mediaType }) {
       if (data) {
         const merged = config.merge(data);
         const unique = Array.from(new Map(merged.map(m => [m.id, m])).values());
-        unique.sort((a, b) => b.popularity - a.popularity);
-        setItems(unique);
+        setBaseItems(unique);
+        setItems(sortLocally(unique, 'popularity.desc'));
       }
       setLoading(false);
     });
-  }, [mediaType]); 
+  }, [mediaType]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Apply filters / sort
   useEffect(() => {
     if (!selectedGenre && !selectedActor) {
       setHasFilters(false);
+      if (baseItems.length > 0) setItems(sortLocally(baseItems, sortBy));
       return;
     }
 
@@ -77,7 +96,7 @@ export default function BrowsePage({ mediaType }) {
     };
 
     fetchFiltered();
-  }, [selectedGenre, selectedActor, sortBy, mediaType]);
+  }, [selectedGenre, selectedActor, sortBy, mediaType, baseItems]);
 
   const handleGenreChange = (genreId) => {
     setSelectedGenre(genreId || null);
@@ -107,6 +126,7 @@ export default function BrowsePage({ mediaType }) {
         <h1>{config.title}</h1>
       </div>
 
+      {/* Alassane to Sami : Je comprends pas pourquoi t'as pas géré les filtres à côté, c'est très confus comme ça */}
       <FilterPanel
         type={mediaType}
         onGenreChange={handleGenreChange}
