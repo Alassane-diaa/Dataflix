@@ -9,6 +9,7 @@ import BrowsePage from './features/browse/BrowsePage.jsx'
 import Favorites from './features/favorites/Favorites.jsx'
 import ItemPage from './features/itemPage/ItemPage.jsx'
 import SearchResults from './features/search/SearchResults.jsx'
+import Footer from './components/Footer.jsx'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
@@ -22,6 +23,7 @@ createRoot(document.getElementById('root')).render(
         <Route path="/search" element={<SearchResults />} />
         <Route path="/:type/:id" element={<ItemPage />} />
       </Routes>
+      <Footer />
     </BrowserRouter>
   </StrictMode>,
 )
