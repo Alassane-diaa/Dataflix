@@ -9,7 +9,10 @@ export default function FilterPanel({
   onSortChange,
   selectedGenre,
   selectedActor,
-  sortBy 
+  sortBy,
+  onTypeChange,
+  mediaType,
+  showActor = true,
 }) {
   const [genres, setGenres] = useState([]);
   const [actorSearch, setActorSearch] = useState('');
@@ -74,6 +77,21 @@ export default function FilterPanel({
 
   return (
     <div className="filter-panel">
+      {onTypeChange && (
+        <div className="filter-group">
+          <label htmlFor="type-select">Type</label>
+          <select
+            id="type-select"
+            value={mediaType || 'all'}
+            onChange={(e) => onTypeChange(e.target.value)}
+          >
+            <option value="all">All</option>
+            <option value="movie">Movies</option>
+            <option value="tv">TV Series</option>
+          </select>
+        </div>
+      )}
+
       <div className="filter-group">
         <label htmlFor="genre-select">Genre</label>
         <select 
@@ -91,7 +109,7 @@ export default function FilterPanel({
         </select>
       </div>
 
-      <div className="filter-group actor-group">
+      {showActor && <div className="filter-group actor-group">
         <label htmlFor="actor-search">Actor</label>
         <div className="actor-input-wrapper">
           <input
@@ -137,7 +155,7 @@ export default function FilterPanel({
             </div>
           )}
         </div>
-      </div>
+      </div>}
 
       <div className="filter-group">
         <label htmlFor="sort-select">Sort By</label>
