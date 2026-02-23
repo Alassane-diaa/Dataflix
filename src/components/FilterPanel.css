@@ -1,42 +1,78 @@
+/* === Filter Panel === */
 .filter-panel {
   display: flex;
   gap: 1.5rem;
-  padding: 1.5rem 4%;
-  background-color: rgba(0, 0, 0, 0.5);
+  padding: 1.2rem 4%;
+  background: linear-gradient(180deg, rgba(10, 10, 10, 0.9) 0%, rgba(20, 20, 20, 0.55) 100%);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   flex-wrap: wrap;
   align-items: flex-end;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  position: relative;
 }
 
+/* Subtle crimson accent line at the top */
+.filter-panel::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 4%;
+  right: 4%;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(220, 20, 60, 0.5) 25%,
+    rgba(220, 20, 60, 0.5) 75%,
+    transparent 100%
+  );
+}
+
+/* === Filter Groups === */
 .filter-group {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 0.4rem;
   flex: 1;
   min-width: 200px;
   position: relative;
 }
 
 .filter-group label {
+  font-size: 0.72rem;
   font-weight: 600;
-  color: #fff;
-  font-size: 0.9rem;
+  color: #b3b3b3;
+  text-transform: uppercase;
+  letter-spacing: 0.09em;
 }
 
 .filter-group select,
 .filter-group input {
-  padding: 0.6rem;
-  background-color: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  color: #fff;
-  border-radius: 4px;
-  font-size: 0.9rem;
-  transition: all 0.2s ease;
+  padding: 0.55rem 0.85rem;
+  background-color: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #e5e5e5;
+  border-radius: 8px;
+  font-size: 0.88rem;
+  font-family: inherit;
+  transition: all 0.25s ease;
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+/* Custom dropdown arrow */
+.filter-group select {
+  width: 250px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='7' viewBox='0 0 12 7'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23b3b3b3' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.8rem center;
+  padding-right: 2.2rem;
 }
 
 .filter-group select option {
-  background-color: #1a1a1a;
-  color: #fff;
+  background-color: #1c1c1c;
+  color: #e5e5e5;
 }
 
 .filter-group select option:checked {
@@ -45,26 +81,28 @@
 
 .filter-group select:hover,
 .filter-group input:hover {
-  background-color: rgba(255, 255, 255, 0.15);
-  border-color: rgba(255, 255, 255, 0.5);
+  background-color: rgba(255, 255, 255, 0.09);
+  border-color: rgba(255, 255, 255, 0.22);
 }
 
 .filter-group select:focus,
 .filter-group input:focus {
   outline: none;
-  background-color: rgba(255, 255, 255, 0.15);
-  border-color: rgba(220, 20, 60, 0.8);
+  background-color: rgba(255, 255, 255, 0.08);
+  border-color: rgba(220, 20, 60, 0.65);
+  box-shadow: 0 0 0 3px rgba(220, 20, 60, 0.1);
 }
 
 .filter-group select:disabled {
-  opacity: 0.6;
+  opacity: 0.4;
   cursor: not-allowed;
 }
 
 .filter-group input::placeholder {
-  color: rgba(255, 255, 255, 0.6);
+  color: rgba(255, 255, 255, 0.3);
 }
 
+/* === Actor Input === */
 .actor-group {
   min-width: 250px;
 }
@@ -80,43 +118,44 @@
   transform: translateY(-50%);
   background: none;
   border: none;
-  color: rgba(255, 255, 255, 0.6);
+  color: rgba(255, 255, 255, 0.4);
   cursor: pointer;
-  font-size: 1.2rem;
+  font-size: 1.1rem;
   padding: 0;
-  width: 24px;
-  height: 24px;
+  width: 22px;
+  height: 22px;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: color 0.2s;
+  transition: color 0.2s ease;
 }
 
 .clear-actor-btn:hover {
-  color: #fff;
+  color: #e5e5e5;
 }
 
+/* === Actor Dropdown === */
 .actor-dropdown {
   position: absolute;
-  top: 100%;
+  top: calc(100% + 5px);
   left: 0;
   right: 0;
-  background-color: #222;
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  border-top: none;
+  background-color: #1c1c1c;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
   max-height: 350px;
   overflow-y: auto;
   z-index: 100;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.75);
 }
 
 .actor-option {
-  padding: 0.6rem;
+  padding: 0.65rem 0.85rem;
   cursor: pointer;
-  color: #fff;
-  transition: background-color 0.2s;
+  color: #e5e5e5;
+  transition: background-color 0.15s ease;
   display: flex;
-  gap: 0.8rem;
+  gap: 0.75rem;
   align-items: center;
   border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
@@ -126,39 +165,43 @@
 }
 
 .actor-option:hover {
-  background-color: rgba(255, 255, 255, 0.1);
+  background-color: rgba(220, 20, 60, 0.12);
 }
 
 .actor-thumb {
-  width: 40px;
-  height: 40px;
-  border-radius: 4px;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
   object-fit: cover;
+  flex-shrink: 0;
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .actor-info {
   display: flex;
   flex-direction: column;
-  gap: 0.2rem;
+  gap: 0.15rem;
   flex: 1;
   min-width: 0;
 }
 
 .actor-name {
   font-weight: 600;
+  font-size: 0.9rem;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
 .actor-dept {
-  font-size: 0.8rem;
-  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.78rem;
+  color: #b3b3b3;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
+/* === Responsive === */
 @media (max-width: 1200px) {
   .filter-panel {
     gap: 1rem;
@@ -173,13 +216,10 @@
 @media (max-width: 768px) {
   .filter-panel {
     flex-direction: column;
-    gap: 1rem;
+    gap: 0.75rem;
   }
 
-  .filter-group {
-    min-width: 100%;
-  }
-
+  .filter-group,
   .actor-group {
     min-width: 100%;
   }
@@ -189,13 +229,22 @@
   }
 }
 
-/* Scrollbar styling */
+/* === Scrollbar === */
 .actor-dropdown::-webkit-scrollbar {
-  width: 6px;
+  width: 5px;
 }
 
 .actor-dropdown::-webkit-scrollbar-track {
   background: transparent;
+}
+
+.actor-dropdown::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 3px;
+}
+
+.actor-dropdown::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.28);
 }
 
 .actor-dropdown::-webkit-scrollbar-thumb {
