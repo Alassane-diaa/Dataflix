@@ -120,12 +120,12 @@ export default function Home() {
               <h1 className="hero-title">{activeMovie.title}</h1>
               <p className="hero-overview">{activeMovie.overview}</p>
               <div className="hero-actions">
-                <Link to={`/movie/${activeMovie.id}`} className="btn-info">More Info</Link>
+                <Link to={`/movie/${activeMovie.id}`} className="btn-info">Plus d'infos</Link>
               </div>
             </div>
 
-            <button className="hero-nav prev" onClick={prev} aria-label="Previous">‹</button>
-            <button className="hero-nav next" onClick={next} aria-label="Next">›</button>
+            <button className="hero-nav prev" onClick={prev} aria-label="Précédent">‹</button>
+            <button className="hero-nav next" onClick={next} aria-label="Suivant">›</button>
 
             {/* Bande de vignettes en bas à droite */}
             <div className="thumb-strip" ref={thumbStripRef}>
@@ -146,7 +146,7 @@ export default function Home() {
         )}
 
         <section className="content-section" ref={seriesRef}>
-          <h2 className="section-title">Popular Series</h2>
+          <h2 className="section-title">Séries populaires</h2>
           <div className="card-grid">
             {popularSeries.slice(0, showAllSeries ? popularSeries.length : 6).map(series => (
               <ItemCard key={series.id} item={series} type="tv" />
@@ -160,7 +160,7 @@ export default function Home() {
         </section>
 
         <section className="content-section" ref={topRatedRef}>
-          <h2 className="section-title">Top Rated</h2>
+          <h2 className="section-title">Les mieux notés</h2>
           <div className="card-grid">
             {topRatedMovies.slice(0, showAllTopRated ? topRatedMovies.length : 6).map(movie => (
               <ItemCard key={movie.id} item={movie} type="movie" />
@@ -175,7 +175,7 @@ export default function Home() {
 
         {/* Section Upcoming */}
         <section className="content-section" ref={upcomingRef}>
-          <h2 className="section-title">Coming Soon</h2>
+          <h2 className="section-title">Prochainement</h2>
           <div className="card-grid">
             {upcomingMovies.slice(0, showAllUpcoming ? upcomingMovies.length : 6).map(movie => (
               <ItemCard key={movie.id} item={movie} type="movie" />

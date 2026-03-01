@@ -32,20 +32,20 @@ export default function Favorites() {
   }, [refreshKey]);
 
   if (loading) {
-    return <div className="page-container"><p className="loading-text">Loading...</p></div>;
+    return <div className="page-container"><p className="loading-text">Chargement...</p></div>;
   }
 
   return (
     <div className="page-container">
       <div className="page-header">
-        <h1>My Favorites</h1>
-        {favorites.length > 0 && <p className="favorites-count">{favorites.length} item{favorites.length > 1 ? 's' : ''} saved</p>}
+        <h1>Mes favoris</h1>
+        {favorites.length > 0 && <p className="favorites-count">{favorites.length} élément{favorites.length > 1 ? 's' : ''} sauvegardé{favorites.length > 1 ? 's' : ''}</p>}
       </div>
 
       {favorites.length === 0 ? (
         <div className="favorites-empty">
-          <p>You don't have any favorites yet.</p>
-          <p>Click the heart icon on movies and series to add them here!</p>
+          <p>Vous n'avez aucun favori pour le moment.</p>
+          <p>Cliquez sur l'icône cœur sur les films et séries pour les ajouter ici !</p>
         </div>
       ) : (
         <div className="page-section">

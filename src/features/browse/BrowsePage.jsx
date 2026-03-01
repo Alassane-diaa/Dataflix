@@ -13,16 +13,16 @@ import ItemCard from '../../components/ItemCard.jsx';
 
 const CONFIG = {
   movie: {
-    title: 'Movies',
+    title: 'Films',
     fetchInitial: fetchMoviesData,
     merge: (d) => [...d.popular, ...d.topRated, ...d.nowPlaying, ...d.upcoming],
-    emptyMessage: 'No movies found. Try different filters.',
+    emptyMessage: 'Aucun film trouvé. Essayez d\'autres filtres.',
   },
   tv: {
-    title: 'TV Series',
+    title: 'Séries TV',
     fetchInitial: fetchSeriesData,
     merge: (d) => [...d.popular, ...d.topRated, ...d.airingToday, ...d.onTheAir],
-    emptyMessage: 'No TV series found. Try different filters.',
+    emptyMessage: 'Aucune série trouvée. Essayez d\'autres filtres.',
   },
 };
 
@@ -112,13 +112,13 @@ export default function BrowsePage({ mediaType }) {
     }
   };
 
-  if (!config) return <p className="loading-text">Unknown media type.</p>;
+  if (!config) return <p className="loading-text">Type de média inconnu.</p>;
 
   const sectionTitle = hasFilters
     ? selectedActor
-      ? `${config.title} with ${selectedActor.name}`
-      : 'Filtered Results'
-    : `All ${config.title}`;
+      ? `${config.title} avec ${selectedActor.name}`
+      : 'Résultats filtrés'
+    : `Tous les ${config.title}`;
 
   return (
     <div className="page-container">
@@ -137,7 +137,7 @@ export default function BrowsePage({ mediaType }) {
         sortBy={sortBy}
       />
 
-      {loading && <p className="loading-text">Loading...</p>}
+      {loading && <p className="loading-text">Chargement...</p>}
 
       {!loading && items.length === 0 && (
         <div className="page-section">

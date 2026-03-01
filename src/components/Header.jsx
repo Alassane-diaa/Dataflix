@@ -69,10 +69,10 @@ export default function Header() {
             </form>
           )}
         </div>
-        <NavLink to="/" className="nav-item">Home</NavLink>
-        <NavLink to="/movies" className="nav-item">Movies</NavLink>
-        <NavLink to="/series" className="nav-item">Series</NavLink>
-        <NavLink to="/favorites" className="nav-item">My favorites</NavLink>
+        <NavLink to="/" className="nav-item">Accueil</NavLink>
+        <NavLink to="/movies" className="nav-item">Films</NavLink>
+        <NavLink to="/series" className="nav-item">Séries</NavLink>
+        <NavLink to="/favorites" className="nav-item">Mes favoris</NavLink>
       </nav>
     </header>
   )

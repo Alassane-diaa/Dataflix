@@ -48,7 +48,7 @@ export default function ItemPage() {
   }
 
   if (!item) {
-    return <div className="item-page error">Item not found</div>;
+    return <div className="item-page error">Contenu introuvable</div>;
   }
 
   const title = item.title || item.name;

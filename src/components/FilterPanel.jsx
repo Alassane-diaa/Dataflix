@@ -85,9 +85,9 @@ export default function FilterPanel({
             value={mediaType || 'all'}
             onChange={(e) => onTypeChange(e.target.value)}
           >
-            <option value="all">All</option>
-            <option value="movie">Movies</option>
-            <option value="tv">TV Series</option>
+            <option value="all">Tout</option>
+            <option value="movie">Films</option>
+            <option value="tv">Séries TV</option>
           </select>
         </div>
       )}
@@ -100,7 +100,7 @@ export default function FilterPanel({
           onChange={(e) => onGenreChange(e.target.value)}
           disabled={loadingGenres}
         >
-          <option value="">All Genres</option>
+          <option value="">Tous les genres</option>
           {genres.map(genre => (
             <option key={genre.id} value={genre.id}>
               {genre.name}
@@ -110,12 +110,12 @@ export default function FilterPanel({
       </div>
 
       {showActor && <div className="filter-group actor-group">
-        <label htmlFor="actor-search">Actor</label>
+        <label htmlFor="actor-search">Acteur</label>
         <div className="actor-input-wrapper">
           <input
             id="actor-search"
             type="text"
-            placeholder="Search actor..."
+            placeholder="Rechercher un acteur..."
             value={actorSearch}
             onChange={(e) => handleSearchActor(e.target.value)}
             onFocus={() => actors.length > 0 && setShowActorList(true)}
@@ -124,7 +124,7 @@ export default function FilterPanel({
             <button 
               className="clear-actor-btn"
               onClick={clearActor}
-              title="Clear actor"
+              title="Effacer"
             >
               ✕
             </button>
@@ -158,18 +158,18 @@ export default function FilterPanel({
       </div>}
 
       <div className="filter-group">
-        <label htmlFor="sort-select">Sort By</label>
+        <label htmlFor="sort-select">Trier par</label>
         <select 
           id="sort-select"
           value={sortBy} 
           onChange={(e) => onSortChange(e.target.value)}
         >
-          <option value="popularity.desc">Most Popular</option>
-          <option value="popularity.asc">Least Popular</option>
-          <option value="vote_average.desc">Highest Rated</option>
-          <option value="release_date.desc">Newest First</option>
-          <option value="release_date.asc">Oldest First</option>
-          <option value="vote_count.desc">Most Voted</option>
+          <option value="popularity.desc">Les plus populaires</option>
+          <option value="popularity.asc">Les moins populaires</option>
+          <option value="vote_average.desc">Les mieux notés</option>
+          <option value="release_date.desc">Les plus récents</option>
+          <option value="release_date.asc">Les plus anciens</option>
+          <option value="vote_count.desc">Les plus votés</option>
         </select>
       </div>
     </div>
