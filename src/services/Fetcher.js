@@ -100,7 +100,7 @@ export const fetchItemDetails = async (type, id) => {
   try {
     const endpoint = type === 'movie' ? 'movie' : 'tv';
     const response = await fetch(
-      `${import.meta.env.VITE_TMDB_BASE_URL}/${endpoint}/${id}?language=fr-FR&append_to_response=credits`,
+      `${import.meta.env.VITE_TMDB_BASE_URL}/${endpoint}/${id}?language=fr-FR&append_to_response=credits,videos,similar`,
       options
     );
     
@@ -111,6 +111,52 @@ export const fetchItemDetails = async (type, id) => {
     return await response.json();
   } catch (error) {
     console.error("Erreur Item Details:", error);
+    return null;
+  }
+};
+
+// Fetch videos (trailers) for a movie or TV series
+export const fetchVideos = async (type, id) => {
+  const options = {
+    method: 'GET',
+    headers: {
+      accept: 'application/json',
+      Authorization: `Bearer ${import.meta.env.VITE_TMDB_TOKEN}`
+    }
+  };
+
+  try {
+    const endpoint = type === 'movie' ? 'movie' : 'tv';
+    const response = await fetch(
+      `${import.meta.env.VITE_TMDB_BASE_URL}/${endpoint}/${id}/videos?language=fr-FR`,
+      options
+    );
+    return await response.json();
+  } catch (error) {
+    console.error('Error fetching videos:', error);
+    return null;
+  }
+};
+
+// Fetch similar movies or TV series
+export const fetchSimilar = async (type, id) => {
+  const options = {
+    method: 'GET',
+    headers: {
+      accept: 'application/json',
+      Authorization: `Bearer ${import.meta.env.VITE_TMDB_TOKEN}`
+    }
+  };
+
+  try {
+    const endpoint = type === 'movie' ? 'movie' : 'tv';
+    const response = await fetch(
+      `${import.meta.env.VITE_TMDB_BASE_URL}/${endpoint}/${id}/similar?language=fr-FR`,
+      options
+    );
+    return await response.json();
+  } catch (error) {
+    console.error('Error fetching similar:', error);
     return null;
   }
 };
