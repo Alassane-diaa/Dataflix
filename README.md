@@ -1,16 +1,56 @@
-# React + Vite
+# Dataflix
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Application web de découverte de films et séries, alimentée par l'API [TMDB](https://www.themoviedb.org/).
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Fonctionnalités
 
-## React Compiler
+- Carrousel de films tendance sur la page d'accueil
+- Pages Films et Séries avec filtres par genre, acteur et tri
+- Page de détail pour chaque film/série : synopsis, casting, bande-annonce YouTube, films/séries similaires, budget/box-office
+- Recherche avec filtres
+- Gestion des favoris
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Configuration
 
-## Expanding the ESLint configuration
+Créez un fichier `.env` à la racine ou juste renommez le fichier `.env.example` en renseignant:
+```env
+VITE_TMDB_BASE_URL=https://api.themoviedb.org/3
+VITE_TMDB_TOKEN=votre_token_api_tmdb
+```
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+Le token est disponible sur [themoviedb.org](https://www.themoviedb.org/settings/api) (section *API Read Access Token*).
+
+Puis pour run en local : 
+
+```bash
+npm install
+
+# Développement
+npm run dev
+
+# Build
+npm run build
+npm run preview
+```
+
+## Structure du projet
+
+```
+src/
+├── App.jsx              # Page d'accueil
+├── components/          # Header, Footer, ItemCard, FilterPanel
+├── features/
+│   ├── browse/          # Page Films / Séries
+│   ├── favorites/       # Page Mes favoris
+│   ├── itemPage/        # Page de détail
+│   └── search/          # Résultats de recherche
+├── services/
+│   └── Fetcher.js       # Toutes les requêtes TMDB
+└── styles/              # CSS global
+```
+
+---
+
+Ce projet utilise l'API TMDB mais n'est pas approuvé ni certifié par TMDB.
